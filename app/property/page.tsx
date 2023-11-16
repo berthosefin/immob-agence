@@ -43,10 +43,10 @@ export default async function Page({
 
   return (
     <>
-      {properties && properties.length > 0 ? (
-        <>
-          <div className="container my-5">
-            <FilterForm />
+      <div className="container my-5">
+        <FilterForm />
+        {properties && properties.length > 0 ? (
+          <>
             <div className="flex flex-wrap">
               {properties?.map((property) => (
                 <div
@@ -63,11 +63,13 @@ export default async function Page({
               path="/property"
               limit={BLIMIT}
             />
-          </div>
-        </>
-      ) : (
-        <p className="text-center text-gray-400 my-4">Aucun bien enregistré.</p>
-      )}
+          </>
+        ) : (
+          <p className="text-center text-gray-400 my-4">
+            Aucun bien enregistré.
+          </p>
+        )}
+      </div>
     </>
   );
 }
