@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Property {
+  id          String           @id @default(uuid())
+  title       String
+  description String
+  surface     Int
+  rooms       Int
+  bedrooms    Int
+  floor       Int
+  price       Int
+  city        String
+  address     String
+  postal_code String
+  sold        Boolean
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  options     PropertyOption[]
+}
+
+model Option {
+  id         String           @id @default(uuid())
+  name       String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  properties PropertyOption[]
+}
+
+model PropertyOption {
+  id         String   @id @default(uuid())
+  property   Property @relation(fields: [propertyId], references: [id])
+  option     Option   @relation(fields: [optionId], references: [id])
+  propertyId String
+  optionId   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
