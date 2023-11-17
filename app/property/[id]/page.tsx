@@ -25,18 +25,18 @@ export default async function Page({ params }: { params: { id: string } }) {
       {propertyData ? (
         <div className="container">
           <div className="flex items-center">
-            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-2">
+            <h1 className="scroll-m-20 text-2xl font-bold tracking-tight lg:text-3xl mb-2">
               {propertyData.title}
             </h1>
             {propertyData.sold && (
               <Badge className="bg-destructive text-white ml-4">Vendu</Badge>
             )}
           </div>
-          <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+          <h2 className="scroll-m-20 pb-2 text-xl font-semibold tracking-tight first:mt-0">
             {propertyData.rooms} pièces - {propertyData.surface} {"\u33A1"}
           </h2>
 
-          <div className="font-bold">
+          <div className="font-extrabold text-4xl mb-2">
             {new Intl.NumberFormat("mg-MG", {
               style: "currency",
               currency: "MGA",
