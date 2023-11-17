@@ -14,8 +14,11 @@ import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "./ui/use-toast";
+import { sendEmail } from "@/lib/actions";
+import { Property } from "@prisma/client";
 
-const formSchema = z.object({
+export const formSchema = z.object({
   firstname: z
     .string()
     .min(2)
@@ -35,13 +38,39 @@ const formSchema = z.object({
   message: z.string().max(1000),
 });
 
-export const ContactForm = () => {
+export type ContactFormType = z.infer<typeof formSchema>;
+
+const ContactForm = ({ property }: { property: Property }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("contact");
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const result = await sendEmail(values, property);
+      if (result && !result.error) {
+        toast({
+          title: `Succès`,
+          description: "Email envoyé avec succès!",
+        });
+
+        Object.keys(values).forEach((key) => {
+          if (Object.keys(formSchema.shape).includes(key)) {
+            form.setValue(key as keyof typeof values, "");
+          }
+        });
+      } else {
+        toast({
+          title: `Erreur`,
+          description: "Une erreur s'est produite lors de l'envoi de l'email.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: `Erreur`,
+        description: "Une erreur inattendue s'est produite.",
+      });
+    }
   }
 
   return (

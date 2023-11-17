@@ -3,6 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "./prisma";
 import { LIMIT } from "./constant";
+import { ContactFormType } from "@/components/contact-form";
+import { Resend } from "resend";
+import { EmailTemplate } from "@/components/email-template";
+import { Option, Property } from "@prisma/client";
+import { PropertyWithOptions } from "@/components/properties/form";
 
 const performAction = async (action: () => Promise<any>, path: string) => {
   try {
@@ -15,7 +20,7 @@ const performAction = async (action: () => Promise<any>, path: string) => {
 };
 
 // Properties
-export const getAllProperties = async () => {
+export const getAllProperties = async (): Promise<Property[]> => {
   const properties = await prisma.property.findMany();
 
   return properties;
@@ -27,7 +32,7 @@ export const getProperties = async ({
 }: {
   page?: number;
   limit?: number;
-}) => {
+}): Promise<Property[]> => {
   const properties = await prisma.property.findMany({
     skip: (page - 1) * limit,
     take: limit,
@@ -56,7 +61,7 @@ export const getFilteredProperties = async ({
   surface?: number | "";
   price?: number | "";
   title?: string | "";
-}) => {
+}): Promise<Property[]> => {
   const filters: {
     rooms?: number | { gte: number };
     surface?: number | { gte: number };
@@ -86,7 +91,9 @@ export const getFilteredProperties = async ({
   return properties;
 };
 
-export const getPropertyById = async (propertyId: string) => {
+export const getPropertyById = async (
+  propertyId: string
+): Promise<PropertyWithOptions | null> => {
   const property = await prisma.property.findUnique({
     where: {
       id: propertyId,
@@ -103,7 +110,7 @@ export const getPropertyById = async (propertyId: string) => {
   return property;
 };
 
-export const createProperty = async (values: any) => {
+export const createProperty = async (values: any): Promise<Property | null> => {
   return performAction(
     async () =>
       await prisma.property.create({
@@ -120,7 +127,10 @@ export const createProperty = async (values: any) => {
   );
 };
 
-export const editProperty = async (propertyId: string, values: any) => {
+export const editProperty = async (
+  propertyId: string,
+  values: any
+): Promise<Property | null> => {
   return performAction(async () => {
     const property = await prisma.property.update({
       where: { id: propertyId },
@@ -148,7 +158,7 @@ export const editProperty = async (propertyId: string, values: any) => {
   }, "/admin/property");
 };
 
-export const deleteProperty = async (propertyId: string) => {
+export const deleteProperty = async (propertyId: string): Promise<void> => {
   return performAction(async () => {
     await prisma.propertyOption.deleteMany({
       where: { propertyId },
@@ -159,7 +169,7 @@ export const deleteProperty = async (propertyId: string) => {
 };
 
 // Options
-export const getAllOptions = async () => {
+export const getAllOptions = async (): Promise<Option[]> => {
   const options = await prisma.option.findMany();
 
   return options;
@@ -171,7 +181,7 @@ export const getOptions = async ({
 }: {
   page?: number;
   limit?: number;
-}) => {
+}): Promise<Option[]> => {
   const options = await prisma.option.findMany({
     skip: (page - 1) * limit,
     take: limit,
@@ -180,7 +190,9 @@ export const getOptions = async ({
   return options;
 };
 
-export const getOptionById = async (optionId: string) => {
+export const getOptionById = async (
+  optionId: string
+): Promise<Option | null> => {
   const option = await prisma.option.findUnique({
     where: {
       id: optionId,
@@ -190,14 +202,17 @@ export const getOptionById = async (optionId: string) => {
   return option;
 };
 
-export const createOption = async (values: any) => {
+export const createOption = async (values: any): Promise<Option | null> => {
   return performAction(
     async () => await prisma.option.create({ data: values }),
     "/admin/option"
   );
 };
 
-export const editOption = async (optionId: string, values: any) => {
+export const editOption = async (
+  optionId: string,
+  values: Partial<Option>
+): Promise<Option | null> => {
   return performAction(
     async () =>
       await prisma.option.update({
@@ -210,7 +225,7 @@ export const editOption = async (optionId: string, values: any) => {
   );
 };
 
-export const deleteOption = async (optionId: string) => {
+export const deleteOption = async (optionId: string): Promise<void> => {
   return performAction(async () => {
     await prisma.propertyOption.deleteMany({
       where: { optionId },
@@ -222,4 +237,24 @@ export const deleteOption = async (optionId: string) => {
       },
     });
   }, "/admin/option");
+};
+
+// Email
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+export const sendEmail = async (
+  values: ContactFormType,
+  property: Property
+) => {
+  try {
+    const data = await resend.emails.send({
+      from: "Immob-agence <onboarding@resend.dev>",
+      to: ["delivered@resend.dev"],
+      subject: "Property Contact Mail",
+      react: EmailTemplate(values, property),
+    });
+    return data;
+  } catch (error) {
+    return { error };
+  }
 };

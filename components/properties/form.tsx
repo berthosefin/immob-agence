@@ -23,7 +23,7 @@ import { useToast } from "../ui/use-toast";
 import { Checkbox } from "../ui/checkbox";
 import { numberRegExp } from "@/lib/constant";
 
-type PropertyWithOptions = Prisma.PropertyGetPayload<{
+export type PropertyWithOptions = Prisma.PropertyGetPayload<{
   include: {
     options: {
       include: {
@@ -87,6 +87,8 @@ const formSchema = z.object({
   sold: z.boolean(),
   options: z.array(z.object({ option: z.object({ id: z.string() }) })),
 });
+
+export type PropertyFormType = z.infer<typeof formSchema>;
 
 export const PropertyForm = ({
   propertyData,
