@@ -11,7 +11,7 @@ export default async function Home() {
           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-2">
             Immob Agence
           </h1>
-          <p className="text-justify mx-40">
+          <p className="text-justify mx-auto">
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Suscipit
             sequi repellendus dolorum ea doloremque totam maiores officiis nisi
             voluptates quisquam, esse, maxime nihil consectetur culpa deleniti
@@ -30,7 +30,10 @@ export default async function Home() {
         <div className="flex flex-wrap">
           {lastProperties && lastProperties.length > 0 ? (
             lastProperties?.map((property) => (
-              <div key={property.id} className="w-1/4 p-4">
+              <div
+                key={property.id}
+                className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4"
+              >
                 <PropertyCard property={property} />
               </div>
             ))

@@ -4,6 +4,8 @@ import { getPropertyById } from "@/lib/actions";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import clsx from "clsx";
+import { Button } from "@/components/ui/button";
 
 export async function generateMetadata({
   params,
@@ -100,15 +102,20 @@ export default async function Page({ params }: { params: { id: string } }) {
                 ))}
               </div>
             </div>
-            <div className="mt-4 flex space-x-2 items-center">
-              <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                Intéressé par ce bien ?
-              </h4>
 
-              <Link href={"/contact-us"} className="hover:font-bold">
-                Nous contactez
-              </Link>
-            </div>
+            {!propertyData.sold ? (
+              <div className="mt-4 flex space-x-2 items-center">
+                <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                  Intéressé par ce bien ?
+                </h4>
+
+                <Button asChild variant={"outline"} size="sm">
+                  <Link href={`/property/${propertyData.id}/contact`}>
+                    Nous contactez
+                  </Link>
+                </Button>
+              </div>
+            ) : null}
           </div>
         </div>
       ) : (
