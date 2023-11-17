@@ -56,7 +56,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <p className="line-clamp-3">{propertyData.description}</p>
                 <div className="mt-4 flex space-x-4">
                   <div className="w-1/2">
-                    <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+                    <h2 className="scroll-m-20 border-b pb-2 text-xl font-semibold tracking-tight first:mt-0">
                       Caractéristique
                     </h2>
                     <Table>
@@ -98,7 +98,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     </Table>
                   </div>
                   <div className="w-1/2">
-                    <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 mb-2">
+                    <h2 className="scroll-m-20 border-b pb-2 text-xl font-semibold tracking-tight first:mt-0 mb-2">
                       Spécificités
                     </h2>
                     {propertyData.options.map((option) => (

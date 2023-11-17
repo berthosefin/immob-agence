@@ -99,8 +99,8 @@ export const FilterForm = () => {
     <div className="p-5 text-center">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="flex space-x-4">
-            <div className="w-1/5">
+          <div className="flex flex-col gap-2 md:flex-row lg:flex-row">
+            <div className="w-full">
               <FormField
                 control={form.control}
                 name="surface"
@@ -114,7 +114,7 @@ export const FilterForm = () => {
                 )}
               />
             </div>
-            <div className="w-1/5">
+            <div className="w-full">
               <FormField
                 control={form.control}
                 name="rooms"
@@ -128,7 +128,7 @@ export const FilterForm = () => {
                 )}
               />
             </div>
-            <div className="w-1/5">
+            <div className="w-full">
               <FormField
                 control={form.control}
                 name="price"
@@ -142,7 +142,7 @@ export const FilterForm = () => {
                 )}
               />
             </div>
-            <div className="w-1/5">
+            <div className="w-full">
               <FormField
                 control={form.control}
                 name="title"
@@ -156,7 +156,7 @@ export const FilterForm = () => {
                 )}
               />
             </div>
-            <div className="w-1/5">
+            <div className="w-full">
               <Button className="w-full" type="submit">
                 Rechercher
               </Button>
