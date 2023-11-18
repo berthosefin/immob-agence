@@ -112,15 +112,13 @@ export default async function Page({ params }: { params: { id: string } }) {
             </div>
 
             <div className="lg:w-1/3">
-              {!propertyData.sold ? (
-                <div className="mt-4">
-                  <h4 className="scroll-m-20 text-xl font-semibold tracking-tight mb-2">
-                    Intéressé par ce bien ?
-                  </h4>
+              <div className="mt-4">
+                <h4 className="scroll-m-20 text-xl font-semibold tracking-tight mb-2">
+                  Intéressé par ce bien ?
+                </h4>
 
-                  <ContactForm property={propertyData} />
-                </div>
-              ) : null}
+                <ContactForm property={propertyData} />
+              </div>
             </div>
           </div>
         </div>

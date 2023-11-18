@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "./ui/use-toast";
 import { sendEmail } from "@/lib/actions";
 import { Property } from "@prisma/client";
+import clsx from "clsx";
 
 export const formSchema = z.object({
   firstname: z
@@ -160,7 +161,15 @@ const ContactForm = ({ property }: { property: Property }) => {
           )}
         />
 
-        <Button type="submit">Nous contacter</Button>
+        <Button
+          type="submit"
+          className={clsx(
+            "w-full",
+            property.sold ? "pointer-events-none opacity-50" : ""
+          )}
+        >
+          Nous contacter
+        </Button>
       </form>
     </Form>
   );
