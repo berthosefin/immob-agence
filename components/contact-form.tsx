@@ -18,6 +18,7 @@ import { toast } from "./ui/use-toast";
 import { sendEmail } from "@/lib/actions";
 import { Property } from "@prisma/client";
 import clsx from "clsx";
+import { useState } from "react";
 
 export const formSchema = z.object({
   firstname: z
@@ -42,13 +43,20 @@ export const formSchema = z.object({
 export type ContactFormType = z.infer<typeof formSchema>;
 
 const ContactForm = ({ property }: { property: Property }) => {
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      setLoading(true);
+
       const result = await sendEmail(values, property);
+
+      setLoading(false);
+
       if (result && !result.error) {
         toast({
           title: `Succès`,
@@ -167,8 +175,9 @@ const ContactForm = ({ property }: { property: Property }) => {
             "w-full",
             property.sold ? "pointer-events-none opacity-50" : ""
           )}
+          disabled={loading}
         >
-          Nous contacter
+          {loading ? "Contacter..." : "Nous contacter"}
         </Button>
       </form>
     </Form>

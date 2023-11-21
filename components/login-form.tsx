@@ -48,7 +48,6 @@ const LoginForm = () => {
 
       setLoading(false);
 
-      console.log(res);
       if (!res?.error) {
         router.push(callbackUrl);
       } else {

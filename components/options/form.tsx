@@ -26,6 +26,7 @@ const formSchema = z.object({
 export const OptionForm = ({ optionData }: { optionData: Option | null }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
 
   const [option, setOption] = useState<Option | null>(null);
 
@@ -58,11 +59,15 @@ export const OptionForm = ({ optionData }: { optionData: Option | null }) => {
     try {
       let result;
 
+      setLoading(true);
+
       if (action === "create") {
         result = await createOption(values);
       } else if (action === "edit" && optionId) {
         result = await editOption(optionId, values);
       }
+
+      setLoading(false);
 
       const successMessage =
         action === "edit"
@@ -109,7 +114,9 @@ export const OptionForm = ({ optionData }: { optionData: Option | null }) => {
           )}
         />
 
-        <Button type="submit">{buttonLabel}</Button>
+        <Button type="submit" disabled={loading}>
+          {loading ? "Chargement..." : buttonLabel}
+        </Button>
       </form>
     </Form>
   );

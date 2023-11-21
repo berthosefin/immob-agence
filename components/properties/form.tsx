@@ -99,6 +99,7 @@ export const PropertyForm = ({
 }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
 
   const [property, setProperty] = useState<PropertyWithOptions | null>(null);
 
@@ -162,11 +163,15 @@ export const PropertyForm = ({
     try {
       let result;
 
+      setLoading(true);
+
       if (action === "create") {
         result = await createProperty(valuesToSave);
       } else if (action === "edit" && propertyId) {
         result = await editProperty(propertyId, valuesToSave);
       }
+
+      setLoading(true);
 
       const successMessage =
         action === "edit"
@@ -444,7 +449,9 @@ export const PropertyForm = ({
           )}
         />
 
-        <Button type="submit">{buttonLabel}</Button>
+        <Button type="submit" disabled={loading}>
+          {loading ? "Chargement..." : buttonLabel}
+        </Button>
       </form>
     </Form>
   );
