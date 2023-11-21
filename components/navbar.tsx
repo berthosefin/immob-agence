@@ -30,7 +30,7 @@ export default function Navbar() {
       <div className="items-center px-4 mx-auto md:flex md:px-4">
         <div className="flex items-center justify-between py-3 md:py-5 md:block">
           <Link href="/">
-            <h1 className="text-3xl font-bold text-base-600">Immbo Agence</h1>
+            <h1 className="text-3xl font-bold text-base-600">Immob Agence</h1>
           </Link>
           <div className="flex items-center md:hidden">
             <ModeToggle />

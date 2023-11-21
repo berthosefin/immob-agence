@@ -6,7 +6,7 @@ import { LIMIT } from "./constant";
 import { ContactFormType } from "@/components/contact-form";
 import { Resend } from "resend";
 import { EmailTemplate } from "@/components/email-template";
-import { Option, Property } from "@prisma/client";
+import { Option, Property, User } from "@prisma/client";
 import { PropertyWithOptions } from "@/components/properties/form";
 
 const performAction = async (action: () => Promise<any>, path: string) => {
@@ -257,4 +257,15 @@ export const sendEmail = async (
   } catch (error) {
     return { error };
   }
+};
+
+// User
+export const getUserByEmail = async (email: string): Promise<User | null> => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  return user;
 };

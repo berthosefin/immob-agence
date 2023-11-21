@@ -2,11 +2,14 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
+import { z } from "zod";
+import bcrypt from "bcrypt";
 
 import { prisma } from "@/lib/prisma";
+import { getUserByEmail } from "@/lib/actions";
 
 export const options: NextAuthOptions = {
-  // adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma),
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_ID as string,
@@ -23,33 +26,32 @@ export const options: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: {
-          label: "Username:",
-          type: "text",
-          placeholder: "Username",
+        email: {
+          label: "Email:",
+          type: "email",
+          placeholder: "example@example.com",
         },
         password: {
           label: "Password:",
           type: "password",
-          placeholder: "Password",
         },
       },
       async authorize(credentials) {
-        const user = {
-          id: "1",
-          name: "admin",
-          password: "admin",
-          role: "admin",
-        };
+        const parsedCredentials = z
+          .object({ email: z.string().email(), password: z.string().min(4) })
+          .safeParse(credentials);
 
-        if (
-          credentials?.username === user.name &&
-          credentials?.password === user.password
-        ) {
-          return user;
-        } else {
-          return null;
+        if (parsedCredentials.success) {
+          const { email, password } = parsedCredentials.data;
+          const user = await getUserByEmail(email);
+          if (!user) return null;
+          const passwordsMatch = await bcrypt.compare(password, user.password);
+
+          if (passwordsMatch) return user;
         }
+
+        console.log("Invalid credentials");
+        return null;
       },
     }),
   ],
