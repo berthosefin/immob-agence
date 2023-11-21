@@ -1,10 +1,21 @@
+"use client";
+
+import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
 const LoginForm = dynamic(() => import("../../components/login-form"), {
   ssr: false,
 });
 
 export default function LoginPage() {
+  const { status } = useSession();
+  const router = useRouter();
+
+  if (status === "authenticated") {
+    router.push("/");
+  }
+
   return (
     <>
       <section className="flex min-h-full overflow-hidden pt-8 sm:py-16">
