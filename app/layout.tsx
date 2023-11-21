@@ -1,11 +1,11 @@
+import AuthProvider from "@/components/auth-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
-import "./globals.css";
+import clsx from "clsx";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import "./globals.css";
 import Navbar from "@/components/navbar";
-import clsx from "clsx";
-import { ThemeProvider } from "@/components/theme-provider";
-import AuthProvider from "@/components/auth-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 

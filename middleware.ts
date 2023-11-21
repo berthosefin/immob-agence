@@ -5,6 +5,13 @@ export default withAuth(
   function middleware(request: NextRequestWithAuth) {
     console.log(request.nextUrl.pathname);
     console.log(request.nextauth.token);
+    const isAuthenticated = !!request.nextauth.token;
+
+    if (request.nextUrl.pathname.startsWith("/signin")) {
+      if (isAuthenticated) {
+        return NextResponse.redirect(new URL("/", request.url));
+      }
+    }
 
     if (
       request.nextUrl.pathname.startsWith("/admin") &&
@@ -20,4 +27,6 @@ export default withAuth(
   }
 );
 
-export const config = { matcher: ["/admin/:path*", "/property/:path*"] };
+export const config = {
+  matcher: ["/signin", "/admin/:path*", "/property/:path*"],
+};

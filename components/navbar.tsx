@@ -8,15 +8,20 @@ import * as React from "react";
 import { LoginButton } from "./login-button";
 import { LogoutButton } from "./logout-button";
 import { ModeToggle } from "./mode-toggle";
+import { Badge } from "./ui/badge";
 
 export default function Navbar() {
   const [state, setState] = React.useState(false);
   const pathname = usePathname();
-  const session = useSession();
+  const { data: session, status } = useSession();
 
   let menus;
 
-  if (pathname.startsWith("/admin/")) {
+  if (
+    pathname.startsWith("/admin") &&
+    status === "authenticated" &&
+    session.user.role === "admin"
+  ) {
     menus = [
       { title: "Gérer les biens", path: "/admin/property" },
       { title: "Gérer les options", path: "/admin/option" },
@@ -48,6 +53,11 @@ export default function Navbar() {
           }`}
         >
           <ul className="justify-end items-center space-y-2 md:flex md:space-x-4 md:space-y-0">
+            {status === "authenticated" ? (
+              <Badge>{session.user.name}</Badge>
+            ) : (
+              ""
+            )}
             {menus.map((item, idx) => (
               <li key={idx} className="hover:font-bold">
                 <Link href={item.path}>{item.title}</Link>
@@ -56,11 +66,7 @@ export default function Navbar() {
             <div className="hidden md:block">
               <ModeToggle />
             </div>
-            {session.status === "authenticated" ? (
-              <LogoutButton />
-            ) : (
-              <LoginButton />
-            )}
+            {status === "authenticated" ? <LogoutButton /> : <LoginButton />}
           </ul>
         </div>
       </div>
