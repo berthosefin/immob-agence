@@ -1,14 +1,18 @@
 "use client";
 
-import * as React from "react";
-import Link from "next/link";
 import { Menu } from "lucide-react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import * as React from "react";
+import { LoginButton } from "./login-button";
+import { LogoutButton } from "./logout-button";
 import { ModeToggle } from "./mode-toggle";
 
 export default function Navbar() {
   const [state, setState] = React.useState(false);
   const pathname = usePathname();
+  const session = useSession();
 
   let menus;
 
@@ -43,7 +47,7 @@ export default function Navbar() {
             state ? "block" : "hidden"
           }`}
         >
-          <ul className="justify-end items-center space-y-8 md:flex md:space-x-6 md:space-y-0">
+          <ul className="justify-end items-center space-y-2 md:flex md:space-x-4 md:space-y-0">
             {menus.map((item, idx) => (
               <li key={idx} className="hover:font-bold">
                 <Link href={item.path}>{item.title}</Link>
@@ -52,6 +56,11 @@ export default function Navbar() {
             <div className="hidden md:block">
               <ModeToggle />
             </div>
+            {session.status === "authenticated" ? (
+              <LogoutButton />
+            ) : (
+              <LoginButton />
+            )}
           </ul>
         </div>
       </div>
