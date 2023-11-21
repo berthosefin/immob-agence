@@ -1,12 +1,24 @@
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import type { NextAuthOptions } from "next-auth";
-import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
+
+import { prisma } from "@/lib/prisma";
 
 export const options: NextAuthOptions = {
+  // adapter: PrismaAdapter(prisma),
   providers: [
     GitHubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
+      clientId: process.env.GITHUB_ID as string,
+      clientSecret: process.env.GITHUB_SECRET as string,
+      profile(profile: GithubProfile) {
+        return {
+          ...profile,
+          role: profile.role ?? "user",
+          id: profile.id.toString(),
+          image: profile.avatar_url,
+        };
+      },
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -23,7 +35,12 @@ export const options: NextAuthOptions = {
         },
       },
       async authorize(credentials) {
-        const user = { id: "42", name: "Thos", password: "admin" };
+        const user = {
+          id: "1",
+          name: "admin",
+          password: "admin",
+          role: "admin",
+        };
 
         if (
           credentials?.username === user.name &&
@@ -36,4 +53,14 @@ export const options: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) token.role = user.role;
+      return token;
+    },
+    async session({ session, token }) {
+      if (session?.user) session.user.role = token.role;
+      return session;
+    },
+  },
 };
