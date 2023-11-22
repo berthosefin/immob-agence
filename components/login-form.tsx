@@ -18,6 +18,7 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "./ui/use-toast";
+import { GithubIcon, LogIn } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -93,7 +94,12 @@ const LoginForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full uppercase" disabled={loading}>
+        <Button
+          type="submit"
+          className="w-full uppercase flex gap-2"
+          disabled={loading}
+        >
+          <LogIn size={16} />
           {loading ? "Connexion..." : "Se connecter"}
         </Button>
 
@@ -102,10 +108,14 @@ const LoginForm = () => {
         </div>
       </form>
       <Button
-        className="w-full uppercase mt-4"
-        onClick={() => signIn("github", { callbackUrl })}
-        disabled={loading}
+        className="w-full uppercase mt-4 flex gap-2"
+        onClick={() =>
+          //TODO: Not working yet
+          signIn("github", { callbackUrl })
+        }
+        disabled={true}
       >
+        <GithubIcon size={16} />
         Continuer avec Github
       </Button>
     </Form>

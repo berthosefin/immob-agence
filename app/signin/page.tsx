@@ -18,14 +18,12 @@ export default function LoginPage() {
 
   return (
     <>
-      <section className="flex min-h-full overflow-hidden pt-8 sm:py-16">
+      <section>
         <div className="mx-auto flex w-full max-w-2xl flex-col px-4 sm:px-6">
           <div className="relative mt-8 sm:mt-12">
-            <h1 className="text-center text-2xl font-medium tracking-tight text-gray-900">
-              Se connecter
-            </h1>
+            <h1 className="text-center text-2xl font-bold">Se connecter</h1>
           </div>
-          <div className="sm:rounded-5xl -mx-4 mt-2 flex-auto bg-white px-4 py-10 shadow-2xl shadow-gray-900/10 sm:mx-0 sm:flex-none sm:p-24">
+          <div className="py-8 sm:px-24 sm:py-8">
             <LoginForm />
           </div>
         </div>
